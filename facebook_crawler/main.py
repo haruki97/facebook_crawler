@@ -4,6 +4,7 @@ from selenium.webdriver.common.keys import Keys
 import pyotp
 import time
 import pickle
+import os
 
 path_cookie_file = './cookies'
 accounts = ["100072676860931|TCnyAOVV68|NR6GR2OPLZT5GHZBFP23RDW3ZVH6JWIO",
@@ -93,6 +94,43 @@ def login_by_username(account: str, browser):
     save_cookie(browser, path_cookie_file)
 
 
+def export_file_in_ads(browser):
+    browser.get('https://facebook.com/pe')
+    time.sleep(3)
+    try:
+        browser.find_elements_by_css_selector("body > div > div > div > div > div > div > div > div > div > span > div > div")[0].click()
+        time.sleep(3)
+        browser.find_elements_by_css_selector("body > div > div> div > div > div > div > div > div > div > span > div")[0].click()
+    except:
+        pass
+
+    # add file
+    try:
+        # click icon Export & Import
+        # when small screen
+        try:
+            browser.find_elements_by_css_selector(
+                "div > div > div > div:nth-child(1) > div >div>div>div>div>div:nth-child(1)>div:nth-child(5)")[
+                1].click()
+            browser.find_element_by_xpath(
+                '//*[@id="facebook"]/body/div[5]/div[1]/div[1]/div/div/div[1]/div[2]/div/div[12]').click()
+        except:
+            browser.find_elements_by_css_selector(
+                "div > div > div > div:nth-child(1) > div >div>div>div>div>div>div:nth-child(6)>div:nth-child(4)")[
+                0].click()
+
+            # click ads
+            browser.find_elements_by_css_selector(
+                "body > div:nth-child(63) > div > div > div > div > div > div > div > div:nth-child(9)")[0].click()
+
+        # import file
+        time.sleep(3)
+        browser.find_element_by_xpath("//input[@type='file']").send_keys(os.getcwd() + "/test.txt")
+    except:
+        pass
+
+
+
 def add_payment(browser, card_info):
     browser.get('https://www.facebook.com/ads/manager/billing_history/summary')
     sleep(2)
@@ -130,13 +168,14 @@ if __name__ == '__main__':
             login_by_cookie(browser_driver)
         except:
             login_by_username(acc, browser_driver)
+        export_file_in_ads(browser_driver)
 
-        card_information = {
-            "name": "Oh Sehun",
-            "number": 8437846374,
-            "date": "12/12",
-            "cvv": 213
-        }
         # add method
-        add_payment(browser_driver, card_information)
+        # card_information = {
+        #     "name": "Oh Sehun",
+        #     "number": 8437846374,
+        #     "date": "12/12",
+        #     "cvv": 213
+        # }
+        # add_payment(browser_driver, card_information)
         # browser.close()
