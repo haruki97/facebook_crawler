@@ -5,6 +5,11 @@ import pyotp
 import time
 import pickle
 import os
+import logging
+import datetime
+
+# Config logger
+logging.basicConfig(filename=f'logging/{datetime.datetime.now().date()}.log', filemode='w', format='%(name)s - %(levelname)s - %(asctime)s - %(message)s')
 
 path_cookie_file = './cookies'
 accounts = ["100072676860931|TCnyAOVV68|NR6GR2OPLZT5GHZBFP23RDW3ZVH6JWIO",
@@ -88,13 +93,14 @@ def login_by_username(account: str, browser):
             # Nho trinh duyet 2nd
             browser.find_element_by_id("checkpointSubmitButton").send_keys(Keys.ENTER)
         except:
+            logging.error(f"login_by_username fail with account {id_account}", exc_info=True)
             pass
             # browser.close()
         # save cookie
     save_cookie(browser, path_cookie_file)
 
 
-def export_file_in_ads(browser):
+def import_file_in_ads(browser):
     browser.get('https://facebook.com/pe')
     time.sleep(3)
     try:
@@ -125,10 +131,10 @@ def export_file_in_ads(browser):
 
         # import file
         time.sleep(3)
-        browser.find_element_by_xpath("//input[@type='file']").send_keys(os.getcwd() + "/test.txt")
+        browser.find_element_by_xpath("//input[@type='file']").send_keys(os.getcwd() + "/docs/export_20211004_1218.csv")
     except:
+        logging.error("import_file_in_ads fails", exc_info=True)
         pass
-
 
 
 def add_payment(browser, card_info):
@@ -155,6 +161,7 @@ def add_payment(browser, card_info):
         inputs[2].send_keys(card_info["date"])
         inputs[3].send_keys(card_info["cvv"])
     except:
+        logging.error(f"add_payment fails with card's number: {card_info.number}", exc_info=True)
         pass
 
 
@@ -168,14 +175,16 @@ if __name__ == '__main__':
             login_by_cookie(browser_driver)
         except:
             login_by_username(acc, browser_driver)
-        export_file_in_ads(browser_driver)
 
         # add method
-        # card_information = {
-        #     "name": "Oh Sehun",
-        #     "number": 8437846374,
-        #     "date": "12/12",
-        #     "cvv": 213
-        # }
-        # add_payment(browser_driver, card_information)
-        # browser.close()
+        card_information = {
+            "number": 4891380817754427,
+            "cvv": 154,
+            "date": '11/22',
+            "name": "Barbara",
+        }
+        add_payment(browser_driver, card_information)
+
+        # create campaign by import file
+        import_file_in_ads(browser_driver)
+        # browser_driver.close()
