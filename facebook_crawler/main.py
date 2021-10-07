@@ -246,7 +246,6 @@ if __name__ == '__main__':
         except:
             login_by_username(acc, browser_driver)
         accept_invite_to_be_admin(browser_driver)
-        break
 
         # add method
         card_information = {
