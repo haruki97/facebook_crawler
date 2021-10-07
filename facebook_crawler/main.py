@@ -103,6 +103,17 @@ def login_by_username(account: str, browser):
 def import_file_in_ads(browser):
     browser.get('https://facebook.com/pe')
     time.sleep(3)
+    # close FB'ads
+    try:
+        try:
+            browser.find_elements_by_css_selector("body > div:nth-child(61) > div > div > div > div > div > div > div > div> div > div> div")[0].click()
+        except:
+            pass
+        browser.find_elements_by_css_selector("body > div > div > div > div > div > div > div > div > div > span > div")[0].click()
+        time.sleep(3)
+    except:
+        pass
+
     try:
         browser.find_elements_by_css_selector("body > div > div > div > div > div > div > div > div > div > span > div > div")[0].click()
         time.sleep(3)
@@ -160,13 +171,28 @@ def add_payment(browser, card_info):
         inputs[1].send_keys(card_info["number"])
         inputs[2].send_keys(card_info["date"])
         inputs[3].send_keys(card_info["cvv"])
+
+        # click save
+        browser.find_elements_by_css_selector('body > div > div:nth-child(2) > div > div:nth-child(1) > div:nth-child(1) > div >div>div>div>div>div:nth-child(1)>div:nth-child(4)>div>div>div>div:nth-child(1)')[0].click()
+        time.sleep(15)
     except:
-        logging.error(f"add_payment fails with card's number: {card_info.number}", exc_info=True)
+        logging.error(f"add_payment fails with card's number: {card_info['number']}", exc_info=True)
         pass
 
 
+def accept_invite_to_be_admin(browser):
+    try:
+        sleep(3)
+        browser.find_elements_by_css_selector("div > div:nth-child(1) > div > div:nth-child(4) > div > div > div:nth-child(2) > span > div > a")[0].click()
+        sleep(3)
+        browser.find_elements_by_css_selector("div > div:nth-child(1) > div > div:nth-child(4) > div > div:nth-child(2) > div > div > div > div > div > div > div > div > div > div>div>div:nth-child(3) > div > div > div>div:nth-child(2)")[0].click()
+        sleep(3)
+        browser.find_element_by_xpath("//div[@aria-label='Chấp nhận']").click()
+    except:
+        pass
+
 if __name__ == '__main__':
-    for acc in accounts[:1]:
+    for acc in accounts[2:3]:
         # browser_driver.switch_to.window(browser_driver.window_handles[index])
         browser_driver = webdriver.Chrome(executable_path='./chromedriver')
         browser_driver.get("https://facebook.com")
@@ -175,12 +201,13 @@ if __name__ == '__main__':
             login_by_cookie(browser_driver)
         except:
             login_by_username(acc, browser_driver)
+        accept_invite_to_be_admin(browser_driver)
 
         # add method
         card_information = {
-            "number": 4891380817754427,
-            "cvv": 154,
-            "date": '11/22',
+            "number": 5411741360450085,
+            "cvv": 476,
+            "date": '06/26',
             "name": "Barbara",
         }
         add_payment(browser_driver, card_information)
