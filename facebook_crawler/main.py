@@ -102,7 +102,7 @@ def login_by_username(account: str, browser):
 
 def import_file_in_ads(browser):
     browser.get('https://facebook.com/pe')
-    time.sleep(3)
+    time.sleep(10)
     # close FB'ads
     try:
         try:
@@ -113,6 +113,19 @@ def import_file_in_ads(browser):
         time.sleep(3)
     except:
         pass
+
+    # confirm facebook page
+    try:
+        browser.find_elements_by_css_selector('body > div > div > div > div > div > div > div> div > div> div > div:nth-child(2)> div >div:nth-child(2)>div:nth-child(2)>div>div>div>div>div>div:nth-child(2)>div>div>div>div>div>div>div>div>div>div>div:nth-child(2)>div:nth-child(1)>div:nth-child(2)>div>div:nth-child(2)>div:nth-child(2) >div>div>div>div:nth-child(3)')[0].click()
+        time.sleep(3)
+    except:
+        ...
+
+    # click btn create camp
+    try:
+        browser.find_elements_by_css_selector('body > div > div > div > div > div  > div > div > div  > div > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) > div > div  > div > div  > div > div:nth-child(2)> div  > div > div > div  > div > div > div  > div > div > div > div:nth-child(1) > div>div>div:nth-child(2)>div:nth-child(1)')[0].click()
+    except:
+        ...
 
     try:
         browser.find_elements_by_css_selector("body > div > div > div > div > div > div > div > div > div > span > div > div")[0].click()
@@ -126,11 +139,20 @@ def import_file_in_ads(browser):
         # click icon Export & Import
         # when small screen
         try:
+            # click btn "Khac"
             browser.find_elements_by_css_selector(
                 "div > div > div > div:nth-child(1) > div >div>div>div>div>div:nth-child(1)>div:nth-child(5)")[
                 1].click()
-            browser.find_element_by_xpath(
-                '//*[@id="facebook"]/body/div[5]/div[1]/div[1]/div/div/div[1]/div[2]/div/div[12]').click()
+            # click btn export/import
+            # browser.find_element_by_xpath(
+            #     '//*[@id="facebook"]/body/div[5]/div[1]/div[1]/div/div/div[1]/div[2]/div/div[12]').click()
+            try:
+                browser.find_elements_by_css_selector('body > div> div > div > div > div > div > div > div > div:nth-child(12)')[0].click()
+            except:
+                try:
+                    browser.find_elements_by_css_selector('body > div> div > div > div > div > div > div > div > div:nth-child(11)')[0].click()
+                except:
+                    pass
         except:
             browser.find_elements_by_css_selector(
                 "div > div > div > div:nth-child(1) > div >div>div>div>div>div>div:nth-child(6)>div:nth-child(4)")[
@@ -143,6 +165,10 @@ def import_file_in_ads(browser):
         # import file
         time.sleep(3)
         browser.find_element_by_xpath("//input[@type='file']").send_keys(os.getcwd() + "/docs/export_20211004_1218.csv")
+
+        # click btn "Nhap"
+        time.sleep(1)
+        browser.find_elements_by_css_selector("body > div > div > div > div > div > div > div > div > div > span > div > div:nth-child(2)")[0].click()
     except:
         logging.error("import_file_in_ads fails", exc_info=True)
         pass
@@ -181,6 +207,23 @@ def add_payment(browser, card_info):
 
 
 def accept_invite_to_be_admin(browser):
+    sleep(3)
+    # skip popup notify
+    try:
+        browser.find_elements_by_css_selector('div')[0].send_keys(Keys.ENTER)
+    except:
+        ...
+
+    # accept invite
+    browser.find_elements_by_css_selector(
+        "div > div:nth-child(1) > div > div:nth-child(4) > div > div > div:nth-child(2) > span > div > a")[0].click()
+    sleep(3)
+    browser.find_elements_by_css_selector(
+        "div > div:nth-child(1) > div > div:nth-child(4) > div > div:nth-child(2) > div > div > div > div > div > div > div > div > div > div>div>div:nth-child(3) > div > div > div>div:nth-child(2)")[
+        0].click()
+    sleep(3)
+    browser.find_element_by_xpath("//div[@aria-label='Chấp nhận']").click()
+    return
     try:
         sleep(3)
         browser.find_elements_by_css_selector("div > div:nth-child(1) > div > div:nth-child(4) > div > div > div:nth-child(2) > span > div > a")[0].click()
@@ -191,8 +234,9 @@ def accept_invite_to_be_admin(browser):
     except:
         pass
 
+
 if __name__ == '__main__':
-    for acc in accounts[2:3]:
+    for acc in accounts[5:6]:
         # browser_driver.switch_to.window(browser_driver.window_handles[index])
         browser_driver = webdriver.Chrome(executable_path='./chromedriver')
         browser_driver.get("https://facebook.com")
@@ -202,6 +246,7 @@ if __name__ == '__main__':
         except:
             login_by_username(acc, browser_driver)
         accept_invite_to_be_admin(browser_driver)
+        break
 
         # add method
         card_information = {
